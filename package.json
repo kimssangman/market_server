@@ -1,0 +1,24 @@
+{
+    "name": "market_server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "set NODE_ENV=development && nodemon server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "express": "^4.19.2",
+        "http": "0.0.1-security",
+        "mongodb": "^4.13.0",
+        "mongoose": "^6.8.0",
+        "nodemon": "^2.0.20",
+        "request": "^2.88.2"
+    }
+}
