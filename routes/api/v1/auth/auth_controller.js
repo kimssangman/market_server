@@ -21,6 +21,7 @@ exports.signUp = async (req, res) => {
     const userData = {
         id: req.body.id,
         password: req.body.password,
+        name: req.body.name,
     };
 
     try {
@@ -47,62 +48,73 @@ exports.signUp = async (req, res) => {
     }
 };
 
-// /*-------------------------------------------------
-// 	Sign In
-// -------------------------------------------------*/
-// exports.signIn = async (req, res) => {
-// 	console.log(`
-// --------------------------------------------------
-//   API  : SignIn
-//   router.post('signIn', authController.signIn)
-// --------------------------------------------------`);
-//     const dbModels = global.DB_MODELS;
+/*-------------------------------------------------
+	Sign In
+-------------------------------------------------*/
+const jwt = require("jsonwebtoken");
 
-// 	// console.log(req.body);
+exports.signIn = async (req, res) => {
+    console.log(`
+--------------------------------------------------
+  API  : SignIn
+  router.post('signIn', authController.signIn)
+--------------------------------------------------`);
+    const dbModels = global.DB_MODELS;
 
-// 	try {
+    // console.log(req.body);
 
-// 		const criteria = {
-// 			id: req.body.id
-// 		}
+    try {
+        const criteria = {
+            id: req.body.id,
+        };
 
-// 		const user = await dbModels.User.findOne(criteria);
+        const user = await dbModels.User.findOne(criteria);
 
-// 		if(!user) {
-// 			// console.log('No Matched Account');
-// 			return res.status(404).send({
-// 				message: 'not found'
-// 			});
-// 		}
+        console.log(user);
 
-// 		const isMatched = await user.comparePassword(req.body.password, user.password);
+        if (!user) {
+            // console.log('No Matched Account');
+            return res.status(404).send({
+                message: "not found",
+            });
+        }
 
-// 		if(!isMatched) {
-// 			return res.status(200).send({
-// 				message: 'mismatch'
-// 			});
-// 		}
+        const isMatched = await user.comparePassword(
+            req.body.password,
+            user.password
+        );
 
-// 		const payload = {
-// 			_id: user._id,
-// 			name: user.name,
-// 		};
+        if (!isMatched) {
+            return res.status(200).send({
+                message: "mismatch",
+            });
+        }
 
-// 		const jwtOption = {
-// 			expiresIn: '1d'
-// 		};
+        const payload = {
+            _id: user._id,
+            name: user.name,
+        };
 
-// 		const token = jwt.sign(payload, process.env.JWT_SECRET, jwtOption);
+        const jwtOption = {
+            expiresIn: "1d",
+        };
 
-// 		/*------------------------------------------
-//         * send token and profile info to client
-// 		--------------------------------------------*/
-// 		res.send({
-// 			token
-// 		});
+        /**-------------------------------
+         * JWT 사용하려면 
+         * npm i jsonwebtoken
+         -------------------------------*/
+        const token = jwt.sign(payload, process.env.JWT_SECRET, jwtOption);
 
-// 	} catch (error) {
-// 		console.log(error);
-// 		return res.status(500).send('An error has occurred in the server');
-// 	}
-// };
+        /*------------------------------------------
+        * send token and profile info to client
+		--------------------------------------------*/
+        res.send({
+            message: "success",
+            token,
+            payload,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send("An error has occurred in the server");
+    }
+};

@@ -10,8 +10,6 @@ exports.getProduct = async (req, res) => {
     const dbModels = global.DB_MODELS;
     const page = parseInt(req.query.page); // 페이지 번호 가져오기
 
-    console.log(page);
-
     try {
         const productsPerPage = 5; // 페이지당 상품 수
         const skipCount = (page - 1) * productsPerPage; // 건너뛸 상품 수

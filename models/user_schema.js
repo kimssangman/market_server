@@ -14,6 +14,9 @@ const user_Schema = mongoose.Schema(
             required: true,
             trim: true,
         },
+        name: {
+            type: String,
+        },
     },
     {
         timestamps: true,
