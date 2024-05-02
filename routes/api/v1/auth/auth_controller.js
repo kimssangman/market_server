@@ -97,6 +97,7 @@ exports.signIn = async (req, res) => {
 
         const jwtOption = {
             expiresIn: "1d",
+            // expiresIn: 60,
         };
 
         /**-------------------------------
