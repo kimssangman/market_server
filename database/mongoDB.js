@@ -28,9 +28,9 @@ main().catch((err) => console.log(err));
 function createSchema() {
     const dbModels = {};
 
-    // dbModels.coldStorageHistory = require('../models/ColdStorageHistory')
     dbModels.User = require("../models/user_schema");
     dbModels.Product = require("../models/product_schema");
+    dbModels.Cart = require("../models/cart_schema");
 
     global.DB_MODELS = dbModels;
 }
