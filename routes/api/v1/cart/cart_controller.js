@@ -39,3 +39,44 @@ exports.addCart = async (req, res) => {
         });
     }
 };
+
+/*-------------------------------------------------
+	Get Cart Length
+-------------------------------------------------*/
+exports.getCartLength = async (req, res) => {
+    console.log(`
+--------------------------------------------------  
+  API  : Cart
+  router.post('getCartLength', cartController.getCartLength) 
+--------------------------------------------------`);
+    const dbModels = global.DB_MODELS;
+
+    console.log(req.query);
+
+    const criteria = {
+        user_id: req.query._id,
+    };
+
+    try {
+        const existingCartItem = await dbModels.Cart.find(criteria);
+
+        if (existingCartItem) {
+            // 이미 해당 _id를 가진 항목이 있는 경우
+            await dbModels.Cart.updateOne(criteria, req.body);
+            return res.status(200).send({
+                count: existingCartItem.length,
+                message: "success",
+            });
+        } else {
+            return res.status(200).send({
+                count: 0,
+                message: "success",
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            error,
+        });
+    }
+};

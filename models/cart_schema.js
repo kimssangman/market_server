@@ -6,6 +6,9 @@ const cart_Schema = mongoose.Schema(
         _id: {
             type: ObjectId,
         },
+        userId: {
+            type: ObjectId,
+        },
         name: {
             type: String,
         },
