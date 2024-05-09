@@ -1,3 +1,5 @@
+const { ObjectId } = require("mongodb");
+
 /*-------------------------------------------------
 	Add Cart
 -------------------------------------------------*/
@@ -51,25 +53,86 @@ exports.getCarts = async (req, res) => {
 --------------------------------------------------`);
     const dbModels = global.DB_MODELS;
 
-    console.log(req.query);
-
     const criteria = {
-        user_id: req.query._id,
+        userId: req.query._id,
     };
 
+    console.log(criteria.userId);
+
     try {
-        const carts = await dbModels.Cart.find(criteria);
+        const carts = await dbModels.Cart.aggregate([
+            {
+                $project: {
+                    _id: 1,
+                    userId: 1,
+                    name: 1,
+                    price: 1,
+                    count: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    total: { $multiply: ["$price", "$count"] }, // 각 상품의 총 가격 계산
+                },
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "product",
+                },
+            },
+            {
+                $unwind: {
+                    path: "$product",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $addFields: {
+                    image: "$product.image",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    userId: 1,
+                    name: 1,
+                    price: 1,
+                    count: 1,
+                    image: 1,
+                    total: 1, // 총 가격 추가
+                    createdAt: 1,
+                    updatedAt: 1,
+                },
+            },
+        ]);
 
         if (carts) {
-            // 이미 해당 _id를 가진 항목이 있는 경우
-            await dbModels.Cart.updateOne(criteria, req.body);
+            // 제품의 총 가격도 보낸다.
+            const total = await dbModels.Cart.aggregate([
+                {
+                    $match: {
+                        userId: ObjectId(criteria.userId),
+                    },
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: { $multiply: ["$price", "$count"] } }, // 모든 상품의 총 가격 계산
+                    },
+                },
+            ]);
+
+            console.log(total);
             return res.status(200).send({
                 carts,
+                total,
                 message: "success",
             });
         } else {
             return res.status(200).send({
                 carts: 0,
+                total: 0,
                 message: "success",
             });
         }
