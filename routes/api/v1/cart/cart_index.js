@@ -5,6 +5,6 @@ const cartController = require("./cart_controller");
 router.post("/addCart", cartController.addCart);
 
 /* 상품 갯수 가져오기 */
-router.get("/getCartLength", cartController.getCartLength);
+router.get("/getCarts", cartController.getCarts);
 
 module.exports = router;

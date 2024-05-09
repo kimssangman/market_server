@@ -43,11 +43,11 @@ exports.addCart = async (req, res) => {
 /*-------------------------------------------------
 	Get Cart Length
 -------------------------------------------------*/
-exports.getCartLength = async (req, res) => {
+exports.getCarts = async (req, res) => {
     console.log(`
 --------------------------------------------------  
   API  : Cart
-  router.post('getCartLength', cartController.getCartLength) 
+  router.post('getCarts', cartController.getCarts) 
 --------------------------------------------------`);
     const dbModels = global.DB_MODELS;
 
@@ -58,18 +58,18 @@ exports.getCartLength = async (req, res) => {
     };
 
     try {
-        const existingCartItem = await dbModels.Cart.find(criteria);
+        const carts = await dbModels.Cart.find(criteria);
 
-        if (existingCartItem) {
+        if (carts) {
             // 이미 해당 _id를 가진 항목이 있는 경우
             await dbModels.Cart.updateOne(criteria, req.body);
             return res.status(200).send({
-                count: existingCartItem.length,
+                carts,
                 message: "success",
             });
         } else {
             return res.status(200).send({
-                count: 0,
+                carts: 0,
                 message: "success",
             });
         }
