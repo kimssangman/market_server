@@ -57,10 +57,15 @@ exports.getCarts = async (req, res) => {
         userId: req.query._id,
     };
 
-    console.log(criteria.userId);
+    // console.log(criteria);
 
     try {
         const carts = await dbModels.Cart.aggregate([
+            {
+                $match: {
+                    userId: ObjectId(criteria.userId),
+                },
+            },
             {
                 $project: {
                     _id: 1,
@@ -123,7 +128,6 @@ exports.getCarts = async (req, res) => {
                 },
             ]);
 
-            console.log(total);
             return res.status(200).send({
                 carts,
                 total,
