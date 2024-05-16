@@ -92,7 +92,9 @@ exports.signIn = async (req, res) => {
 
         const payload = {
             _id: user._id,
+            id: user.id,
             name: user.name,
+            isAdmin: user.isAdmin,
         };
 
         const jwtOption = {

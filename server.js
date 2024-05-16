@@ -57,6 +57,26 @@ function normalizePort(val) {
     return false;
 }
 
+/////////////////////////////////////////////////////////////
+//소켓통신
+const SocketIO = require("socket.io");
+const wsServer = SocketIO(httpServer);
+
+/*---------------------------
+*  Namespace1
+----------------------------*/
+const socketNameSpace = wsServer.of("/socket");
+
+/*-----------------------------------------------
+*  소켓 이벤트 핸들러
+-----------------------------------------------*/
+const socketHandler = require("./socket/socketHandler");
+
+socketNameSpace.on("connection", (socket) => {
+    socketHandler(socketNameSpace, socket, app);
+});
+/////////////////////////////////////////////////////////////
+
 app.use(function (req, res) {
     console.log(`
     ============================================

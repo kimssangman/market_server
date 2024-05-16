@@ -31,6 +31,7 @@ function createSchema() {
     dbModels.User = require("../models/user_schema");
     dbModels.Product = require("../models/product_schema");
     dbModels.Cart = require("../models/cart_schema");
+    dbModels.Message = require("../models/message_schema");
 
     global.DB_MODELS = dbModels;
 }
